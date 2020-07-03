@@ -1,7 +1,7 @@
 # ImageNet Object Identification 
 The project software creates a machine learning model with the help of the Python neural-network libraries - Keras and Tensorflow on the backend.The model was trained on an ImageNet dataset, consisting of approximately 1.3 million images, divided into 1000 categories. The model achieved 84% accuracy on the testing data and is able to accurately predict objects in images, if these objects are within the 1000 categories. To allow for a better presentation and more user-friendly interface the project was build using Python Flask and deployed to the web with the help of JavaScript
 
-<img src"https://github.com/smmirchev/ImageNet-Object-Identification/blob/master/images/Interface.png">
+<img src="https://github.com/smmirchev/ImageNet-Object-Identification/blob/master/images/Interface.png">
 
 ## Getting Started
 Steps to start the ImageNet project:
