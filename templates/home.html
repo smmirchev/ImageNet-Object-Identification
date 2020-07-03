@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Home Page</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+
+    <style>
+        body {
+            width: 100%;
+            height: 100vh;
+            font-family: 'Poppins', 'Helvetica', sans-serif;
+            background: #2C3E50;
+            background: linear-gradient(to right, #4CA1AF, #2C3E50);
+            color: #ffffe6;
+        }
+
+        .mainBody {
+            margin: auto;
+            width: 60%;
+            padding: 10px;
+            text-align: center;
+            height: 100%;
+
+        }
+
+        .grid-container {
+            display: grid;
+            grid-column-gap: 10px;
+            grid-template-columns: auto auto auto;
+            padding: 5px;
+            margin: 30px 0;
+            border-top: 8px groove #8f673d;
+        }
+
+        .grid-item {
+           /* border: 1px solid black;*/
+            padding: 10px;
+            font-size: 20px;
+            text-align: left;
+        }
+        /*Hides the type=file contents so we can style only the label*/
+        input[type='file'] {
+            display: none;
+        }
+
+
+        .myButton {
+            background:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
+            background-color: #3d94f6;
+            border: 0;
+            cursor:pointer;
+            color:#ffffe6;
+            font-size:15px;
+            font-weight:bold;
+            padding:7px 20px;
+            margin: 25px 0;
+        }
+
+        .myButton:hover {
+            background:linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
+        }
+
+        #firstButton {
+            margin-top: 25px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="mainBody">
+    <h1>CHOOSE AN IMAGE TO GET PREDICTIONS</h1>
+
+    <form id="upload-file" method="post" enctype="multipart/form-data">
+        <div class="grid-container">
+            <div class="grid-item">
+                <img id="showImage" src="#" alt="" />
+            </div>
+            <div class="grid-item">
+                <div id="firstButton">
+                    <!-- Label is used as a button instead of the input -->
+                    <label class="myButton">
+                        <input name="file" type="file" onchange="readURL(this)"/>
+                        Choose Image
+                    </label>
+                </div>
+                <div>
+                    <button class="myButton" id="upload-file-btn" type="button">Get Predictions</button>
+                </div>
+            </div>
+            <div class="grid-item">
+                <p>Predicted Results:<br></p>
+                <p id="result"></p>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+<script>
+    /** Sends the image and receives the predictions */
+$(function() {
+    $('#upload-file-btn').click(function() {
+        let form_data = new FormData($('#upload-file')[0]);
+        $.ajax({
+            type: 'POST',
+            url : "{{url_for('make_predictions')}}",
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                //$('#result').text(data);
+                /** Format the string tuple - one prediction per line */
+               let path = $('#result');
+               path.text(data);
+               let formatted = path.html().split("%");
+                formatted = formatted[0] + "&percnt;" + "<br>" + formatted[1] + "&percnt;" + "<br>" + formatted[2] + "&percnt;";
+                path.html(formatted)
+            },
+        });
+    });
+});
+
+/** Dynamically changes the user selected images */
+function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#showImage')
+                    .attr('src', e.target.result)
+                    .width(248)
+                    .height(248);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+</html>
